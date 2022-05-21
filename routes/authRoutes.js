@@ -15,4 +15,6 @@ router.get("/me", checkAuth, authController.fetchCurrentUser);
 
 router.get("/admin", checkAuth, checkAdmin, authController.handleAdmin);
 
+router.patch("/updateUser/:id", authController.updateUser);
+
 module.exports = router;

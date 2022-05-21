@@ -14,10 +14,10 @@ const { createJwtToken, verifyJwtToken } = require("../utils/token");
 
 exports.createNewUser = async (req, res, next) => {
   try {
-    let { phone, name } = req.body;
+    let userData = req.body;
 
     // check duplicate phone Number
-    const phoneExist = await User.findOne({ phone });
+    const phoneExist = await User.findOne({ phone: userData.phone });
 
     if (phoneExist) {
       next({ status: 400, message: PHONE_ALREADY_EXISTS_ERR });
@@ -25,11 +25,12 @@ exports.createNewUser = async (req, res, next) => {
     }
 
     // create new user
-    const createUser = new User({
-      phone,
-      name,
-      role: phone === process.env.ADMIN_PHONE ? "ADMIN" : "USER",
-    });
+    // const createUser = new User({
+    //   phone,
+    //   name,
+    //   role: phone === process.env.ADMIN_PHONE ? "ADMIN" : "USER",
+    // });
+    const createUser = new User(userData);
 
     // save user
 
@@ -161,6 +162,25 @@ exports.handleAdmin = async (req, res, next) => {
       },
     });
   } catch (error) {
+    next(error);
+  }
+};
+
+exports.updateUser = async (req, res, next) => {
+  try {
+    let updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        user: updatedUser,
+      },
+    });
+  } catch (error) {
+    console.log(error);
     next(error);
   }
 };
