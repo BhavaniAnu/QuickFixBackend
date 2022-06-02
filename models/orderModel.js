@@ -11,6 +11,15 @@ const orderSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: "User",
   },
+  serviceDate: {
+    type: Date,
+  },
+  availableTiming: {
+    type: Number,
+  },
+  labourCost: {
+    type: Number,
+  },
   confirmationCode: {
     type: String,
     required: true,
